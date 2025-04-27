@@ -1,0 +1,10 @@
+spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+logging:
+  level:
+    org.springframework.r2dbc: INFO
+    io.r2dbc.postgresql: INFO
+    org.flywaydb.core: DEBUG

@@ -1,0 +1,26 @@
+{
+  "realm": "wallet-realm",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "wallet-api",
+      "secret": "A2n6FYArzOcg89T3kbu1iaKbGvgFaTsd",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "clientAuthenticatorType": "client-secret",
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "authorizationServicesEnabled": false,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"],
+      "attributes": {
+        "access.token.lifespan": "3600"
+      },
+      "defaultClientScopes": [],
+      "optionalClientScopes": []
+    }
+  ]
+}

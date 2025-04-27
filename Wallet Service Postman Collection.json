@@ -1,0 +1,218 @@
+{
+	"info": {
+		"_postman_id": "1d2d3d4d-5e6f-7g8h-9i0j-123456789abc",
+		"name": "Wallet Service Postman Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"description": "Postman collection to test Wallet Service API with automatic token retrieval."
+	},
+	"item": [
+		{
+			"name": "Auth - Get Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{ "key": "grant_type", "value": "client_credentials" },
+						{ "key": "client_id", "value": "wallet-api" },
+						{ "key": "client_secret", "value": "A2n6FYArzOcg89T3kbu1iaKbGvgFaTsd" }
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/realms/wallet-realm/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["realms", "wallet-realm", "protocol", "openid-connect", "token"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Wallet - Onboarding",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (!pm.environment.get('access_token')) {",
+							"  pm.sendRequest({",
+							"    url: 'http://localhost:8080/realms/wallet-realm/protocol/openid-connect/token',",
+							"    method: 'POST',",
+							"    header: { 'Content-Type': 'application/x-www-form-urlencoded' },",
+							"    body: {",
+							"      mode: 'urlencoded',",
+							"      urlencoded: [",
+							"        { key: 'grant_type', value: 'client_credentials' },",
+							"        { key: 'client_id', value: 'wallet-api' },",
+							"        { key: 'client_secret', value: 'A2n6FYArzOcg89T3kbu1iaKbGvgFaTsd' }",
+							"      ]",
+							"    }",
+							"  }, function (err, res) {",
+							"    pm.environment.set('access_token', res.json().access_token);",
+							"  });",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8081/wallets/onboarding",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["wallets", "onboarding"]
+				},
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"fullName\": \"John Doe\",\n  \"documentNumber\": \"12345678901\",\n  \"email\": \"john@example.com\",\n  \"phoneNumber\": \"11999999999\"\n}"
+				}
+			}
+		},
+		{
+			"name": "Wallet - Get Balance",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8081/wallets/{{walletId}}/balance",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["wallets", "{{walletId}}", "balance"]
+				}
+			}
+		},
+		{
+			"name": "Wallet - Historical Balance",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8081/wallets/{{walletId}}/historical-balance?referenceDate={{referenceDate}}",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["wallets", "{{walletId}}", "historical-balance"],
+					"query": [
+						{
+							"key": "referenceDate",
+							"value": "{{referenceDate}}"
+						}
+					]
+				}
+			}
+		},
+		{
+			"name": "Wallet - Deposit",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8081/wallets/{{walletId}}/deposit",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["wallets", "{{walletId}}", "deposit"]
+				},
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 100\n}"
+				}
+			}
+		},
+		{
+			"name": "Wallet - Withdraw",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8081/wallets/{{walletId}}/withdraw",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["wallets", "{{walletId}}", "withdraw"]
+				},
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 50\n}"
+				}
+			}
+		},
+		{
+			"name": "Wallet - Transfer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8081/wallets/{{fromWalletId}}/transfer",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["wallets", "{{fromWalletId}}", "transfer"]
+				},
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"toWalletId\": \"{{toWalletId}}\",\n  \"amount\": 50\n}"
+				}
+			}
+		}
+	],
+	"event": []
+}
