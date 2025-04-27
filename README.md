@@ -77,7 +77,7 @@ docker-compose up --build
 
 ## Testing the API
 
-- Import the **`wallet-service.postman_collection.json`** file located in the root of the project into Postman.
+- Import the **`Wallet Service Postman Collection.json`** file located in the root of the project into Postman.
 - The collection is already configured to:
   - Retrieve an access token from Keycloak.
   - Set the token dynamically in subsequent requests.
